@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   hyprland,
   ...
 }: let
@@ -341,7 +342,7 @@ in {
 
   # Networking
   networking = {
-    hostName = "rvbee";
+    hostName = lib.mkDefault "rvbee";
     networkmanager.enable = true;
     firewall = {
       enable = false;
