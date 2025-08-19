@@ -839,6 +839,7 @@ def run():
         [
             f"TMPDIR={root_mount_point}/tmp",
             "nixos-install",
+            "--impure",
             "--no-root-passwd",
             "--root",
             root_mount_point,
