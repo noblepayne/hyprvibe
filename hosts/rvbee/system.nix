@@ -456,7 +456,7 @@ in {
   documentation.man.enable = false;
 
   # User configuration
-  users.users.chrisf = {
+  users.users.chrisf = lib.mkDefault {
     isNormalUser = true;
     shell = pkgs.fish;
     description = "Chris Fisher";
