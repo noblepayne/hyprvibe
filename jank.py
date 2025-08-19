@@ -325,25 +325,29 @@ cfglatestkernel = """  # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
 """
+
+
 def env_is_set(name):
     envValue = os.environ.get(name)
     return not (envValue is None or envValue == "")
 
+
 def generateProxyStrings():
     proxyEnv = []
-    if env_is_set('http_proxy'):
-        proxyEnv.append('http_proxy={}'.format(os.environ.get('http_proxy')))
-    if env_is_set('https_proxy'):
-        proxyEnv.append('https_proxy={}'.format(os.environ.get('https_proxy')))
-    if env_is_set('HTTP_PROXY'):
-        proxyEnv.append('HTTP_PROXY={}'.format(os.environ.get('HTTP_PROXY')))
-    if env_is_set('HTTPS_PROXY'):
-        proxyEnv.append('HTTPS_PROXY={}'.format(os.environ.get('HTTPS_PROXY')))
+    if env_is_set("http_proxy"):
+        proxyEnv.append("http_proxy={}".format(os.environ.get("http_proxy")))
+    if env_is_set("https_proxy"):
+        proxyEnv.append("https_proxy={}".format(os.environ.get("https_proxy")))
+    if env_is_set("HTTP_PROXY"):
+        proxyEnv.append("HTTP_PROXY={}".format(os.environ.get("HTTP_PROXY")))
+    if env_is_set("HTTPS_PROXY"):
+        proxyEnv.append("HTTPS_PROXY={}".format(os.environ.get("HTTPS_PROXY")))
 
     if len(proxyEnv) > 0:
         proxyEnv.insert(0, "env")
 
     return proxyEnv
+
 
 def pretty_name():
     return _("Installing NixOS.")
@@ -377,7 +381,7 @@ def run():
     libcalamares.job.setprogress(0.1)
 
     ngc_cfg = configparser.ConfigParser()
-    ngc_cfg["Defaults"] = { "Kernel": "lts" }
+    ngc_cfg["Defaults"] = {"Kernel": "lts"}
     ngc_cfg.read("/etc/nixos-generate-config.conf")
 
     # Create initial config file
@@ -570,27 +574,27 @@ def run():
                 catenate(variables, conf, localeconf.get(conf).split("/")[0])
 
     # Choose desktop environment
-    #if gs.value("packagechooser_packagechooser") == "gnome":
+    # if gs.value("packagechooser_packagechooser") == "gnome":
     #    cfg += cfggnome
-    #elif gs.value("packagechooser_packagechooser") == "plasma6":
+    # elif gs.value("packagechooser_packagechooser") == "plasma6":
     #    cfg += cfgplasma6
-    #elif gs.value("packagechooser_packagechooser") == "xfce":
+    # elif gs.value("packagechooser_packagechooser") == "xfce":
     #    cfg += cfgxfce
-    #elif gs.value("packagechooser_packagechooser") == "pantheon":
+    # elif gs.value("packagechooser_packagechooser") == "pantheon":
     #    cfg += cfgpantheon
-    #elif gs.value("packagechooser_packagechooser") == "cinnamon":
+    # elif gs.value("packagechooser_packagechooser") == "cinnamon":
     #    cfg += cfgcinnamon
-    #elif gs.value("packagechooser_packagechooser") == "mate":
+    # elif gs.value("packagechooser_packagechooser") == "mate":
     #    cfg += cfgmate
-    #elif gs.value("packagechooser_packagechooser") == "enlightenment":
+    # elif gs.value("packagechooser_packagechooser") == "enlightenment":
     #    cfg += cfgenlightenment
-    #elif gs.value("packagechooser_packagechooser") == "lxqt":
+    # elif gs.value("packagechooser_packagechooser") == "lxqt":
     #    cfg += cfglxqt
-    #elif gs.value("packagechooser_packagechooser") == "lumina":
+    # elif gs.value("packagechooser_packagechooser") == "lumina":
     #    cfg += cfglumina
-    #elif gs.value("packagechooser_packagechooser") == "budgie":
+    # elif gs.value("packagechooser_packagechooser") == "budgie":
     #    cfg += cfgbudgie
-    #elif gs.value("packagechooser_packagechooser") == "deepin":
+    # elif gs.value("packagechooser_packagechooser") == "deepin":
     #    cfg += cfgdeepin
 
     if (
@@ -797,8 +801,12 @@ def run():
 
     # Write the configuration.nix file
     libcalamares.utils.host_env_process_output(["cp", "/dev/stdin", config], None, cfg)
+    libcalamares.utils.host_env_process_output(["mkdir", f"{root_mount_point}/tmp"])
     newhost = gs.value("hostname") or "nixos"
-    libcalamares.utils.host_env_process_output(["cp", "/dev/stdin", f"{flake}/flake.nix"], None, '''
+    libcalamares.utils.host_env_process_output(
+        ["cp", "/dev/stdin", f"{flake}/flake.nix"],
+        None,
+        """
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -811,27 +819,31 @@ def run():
     hyprvibe,
     ...
   }: {
-    nixosConfigurations.''' + newhost + ''' = nixpkgs.lib.nixosSystem {
+    nixosConfigurations."""
+        + newhost
+        + """ = nixpkgs.lib.nixosSystem {
       modules = [./configuration.nix "${hyprvibe}/hosts/rvbee/system.nix"];
     };
   };
 }
-    ''')
+    """,
+    )
 
     status = _("Installing NixOS")
     libcalamares.job.setprogress(0.3)
 
     # build nixos-install command
-    nixosInstallCmd = [ "pkexec" ]
+    nixosInstallCmd = ["pkexec"]
     nixosInstallCmd.extend(generateProxyStrings())
     nixosInstallCmd.extend(
         [
+            f"TMPDIR={root_mount_point}/tmp",
             "nixos-install",
             "--no-root-passwd",
             "--root",
             root_mount_point,
             "--flake",
-            f"{flake}#{newhost}"
+            f"{flake}#{newhost}",
         ]
     )
 
@@ -839,9 +851,7 @@ def run():
     try:
         output = ""
         proc = subprocess.Popen(
-            nixosInstallCmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT
+            nixosInstallCmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
         )
         while True:
             line = proc.stdout.readline().decode("utf-8")
