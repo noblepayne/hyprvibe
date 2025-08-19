@@ -8,12 +8,18 @@
 
     prettyswitch.url = "github:noblepayne/pretty-switch";
     prettyswitch.inputs.nixpkgs.follows = "nixpkgs";
-    
+
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, prettyswitch, hyprland, ... }: {
+  outputs = {
+    self,
+    nixpkgs,
+    prettyswitch,
+    hyprland,
+    ...
+  }: {
     # Formatter (optional)
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
 
@@ -21,7 +27,9 @@
       rvbee = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
+          hyprland.nixosModules.default
           ./hosts/rvbee/system.nix
+          ./hosts/rvbee/hardware-configuration.nix
           prettyswitch.nixosModules.default
         ];
         specialArgs = {
@@ -32,14 +40,27 @@
         system = "x86_64-linux";
         modules = [
           # Graphical ISO with Calamares (Plasma)
-          (nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-plasma5.nix")
+          (nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix")
           # Optional: add extra tools to the live ISO
-          ({ pkgs, ... }: {
+          ({pkgs, ...}: {
             environment.systemPackages = with pkgs; [
               neovim
               git
               firefox
               btop
+            ];
+            nix.settings.experimental-features = ["nix-command" "flakes"];
+            nixpkgs.overlays = [
+              (final: prev: {
+                calamares-nixos-extensions = prev.calamares-nixos-extensions.overrideAttrs (old: {
+                  # Replace the config generation script
+                  postInstall =
+                    (old.postInstall or "")
+                    + ''
+                      cp ${./jank.py} $out/lib/calamares/modules/nixos/main.py
+                    '';
+                });
+              })
             ];
           })
         ];

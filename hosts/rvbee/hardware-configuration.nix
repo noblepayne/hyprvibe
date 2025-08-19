@@ -12,11 +12,20 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
+  # Boot configuration
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+  };
+
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "usbhid" "usb_storage" "sd_mod"];
   boot.initrd.kernelModules = [];
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];
   boot.kernelParams = ["amdgpu.securedisplay=0" "preempt=full" "threadirqs"];
+  services.btrfs.autoScrub.enable = true;
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/0a78cb30-c575-4884-ba20-c542212f7acb";
     fsType = "btrfs";

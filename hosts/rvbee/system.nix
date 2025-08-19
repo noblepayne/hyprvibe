@@ -1,6 +1,9 @@
-{ config, pkgs, hyprland, ... }:
-
-let
+{
+  config,
+  pkgs,
+  hyprland,
+  ...
+}: let
   # Package groups
   devTools = with pkgs; [
     git
@@ -200,7 +203,6 @@ let
     starship
     # zoxide  # deduped; present in utilities
     rclone-browser
-    
   ];
 
   gaming = with pkgs; [
@@ -272,26 +274,11 @@ let
       systemctl --user set-environment GITHUB_TOKEN="$value"
     fi
   '';
-in
-{
-  imports = [
-    # Import the Hyprland flake module
-    hyprland.nixosModules.default
-    # Import your hardware configuration
-    ./hardware-configuration.nix
-  ];
-
-  # Boot configuration
-  boot = {
-    loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-    };
-    kernelPackages = pkgs.linuxPackages_zen;
-  };
+in {
+  # Kernel configuration
+  boot.kernelPackages = pkgs.linuxPackages_zen;
 
   # System performance and maintenance
-  services.btrfs.autoScrub.enable = true;
   nix.settings.auto-optimise-store = true;
   nix.gc = {
     automatic = true;
@@ -331,8 +318,8 @@ in
     };
     user.services.kwalletd = {
       description = "KWallet user daemon";
-      after = [ "default.target" ];
-      wantedBy = [ "default.target" ];
+      after = ["default.target"];
+      wantedBy = ["default.target"];
       serviceConfig = {
         ExecStart = "${pkgs.kdePackages.kwallet}/bin/kwalletd6";
         Restart = "on-failure";
@@ -342,8 +329,8 @@ in
     # Load GITHUB_TOKEN into the systemd user manager environment from a local secret file
     user.services.set-github-token = {
       description = "Set GITHUB_TOKEN in systemd --user environment from ~/.config/secrets/github_token";
-      after = [ "default.target" ];
-      wantedBy = [ "default.target" ];
+      after = ["default.target"];
+      wantedBy = ["default.target"];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
@@ -385,7 +372,7 @@ in
   services = {
     fstrim.enable = true;
     # Ensure brightnessctl udev rules are active
-    udev.packages = [ pkgs.brightnessctl ];
+    udev.packages = [pkgs.brightnessctl];
     udisks2.enable = true;
     gvfs.enable = true;
     tumbler.enable = true;
@@ -445,7 +432,7 @@ in
       login.kwallet.enable = true;
       gdm.kwallet.enable = true;
       gdm-password.kwallet.enable = true;
-      hyprlock = { };
+      hyprlock = {};
       # Unlock GNOME Keyring on login for GVFS credentials
       login.enableGnomeKeyring = true;
       gdm-password.enableGnomeKeyring = true;
@@ -500,7 +487,7 @@ in
     # BTC script for hyprlock
     cp ${./scripts/hyprlock-btc.sh} /home/chrisf/.config/hypr/hyprlock-btc.sh
     chmod +x /home/chrisf/.config/hypr/hyprlock-btc.sh
-    
+
     mkdir -p /home/chrisf/.config/waybar
     cp ${./waybar.json} /home/chrisf/.config/waybar/config
     # Theme and scripts for Waybar (cyberpunk aesthetic + custom modules)
@@ -519,7 +506,7 @@ in
     chmod +x /home/chrisf/.config/waybar/scripts/*.sh
     chmod +x /home/chrisf/.config/waybar/scripts/*.py || true
     chown -R chrisf:users /home/chrisf/.config/waybar
-    
+
     # Create Atuin Fish configuration
     mkdir -p /home/chrisf/.config/fish/conf.d
     cat > /home/chrisf/.config/fish/conf.d/atuin.fish << 'EOF'
@@ -626,8 +613,6 @@ in
     };
   };
 
-
-
   # Fonts
   fonts.packages = with pkgs; [
     noto-fonts
@@ -668,11 +653,11 @@ in
     enable = true;
     xdgOpenUsePortal = true;
     # Hyprland module provides its own portal; include only GTK here to avoid duplicate units
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    extraPortals = [pkgs.xdg-desktop-portal-gtk];
     config = {
       common = {
-        default = [ "hyprland" "gtk" ];
-        "org.freedesktop.impl.portal.ScreenCast" = [ "hyprland" ];
+        default = ["hyprland" "gtk"];
+        "org.freedesktop.impl.portal.ScreenCast" = ["hyprland"];
       };
     };
   };
@@ -693,4 +678,4 @@ in
 
   # System version
   system.stateVersion = "23.11";
-} 
+}
