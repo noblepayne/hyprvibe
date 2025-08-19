@@ -388,7 +388,7 @@ def run():
     # Setup variables
     root_mount_point = gs.value("rootMountPoint")
     config = os.path.join(root_mount_point, "etc/nixos/configuration.nix")
-    flake = os.path.join(root_mount_point, "etc/nixos/flake.nix")
+    flake = os.path.join(root_mount_point, "etc/nixos")
     fw_type = gs.value("firmwareType")
     bootdev = (
         "nodev"
@@ -797,8 +797,8 @@ def run():
 
     # Write the configuration.nix file
     libcalamares.utils.host_env_process_output(["cp", "/dev/stdin", config], None, cfg)
-    newhost = gs.value("hostname") 
-    libcalamares.utils.host_env_process_output(["cp", "/dev/stdin", flake], None, f'''
+    newhost = gs.value("hostname") or "nixos"
+    libcalamares.utils.host_env_process_output(["cp", "/dev/stdin", f"{flake}/flake.nix"], None, '''
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -811,7 +811,7 @@ def run():
     hyprvibe,
     ...
   }: {
-    nixosConfigurations.{newhost}= nixpkgs.lib.nixosSystem {
+    nixosConfigurations.''' + newhost + ''' = nixpkgs.lib.nixosSystem {
       modules = [./configuration.nix "${hyprvibe}/hosts/rvbee/system.nix"];
     };
   };
