@@ -802,6 +802,10 @@ def run():
     # Write the configuration.nix file
     libcalamares.utils.host_env_process_output(["cp", "/dev/stdin", config], None, cfg)
     libcalamares.utils.host_env_process_output(["mkdir", f"{root_mount_point}/tmp"])
+    libcalamares.utils.host_env_process_output(
+        ["chmod", "777", root_mount_point + "/tmp"], None
+    )
+    libcalamares.utils.host_env_process_output(["chmod", "777", root_mount_point], None)
     newhost = gs.value("hostname") or "nixos"
     libcalamares.utils.host_env_process_output(
         ["cp", "/dev/stdin", f"{flake}/flake.nix"],
@@ -837,7 +841,6 @@ def run():
     nixosInstallCmd.extend(generateProxyStrings())
     nixosInstallCmd.extend(
         [
-            f"TMPDIR={root_mount_point}/tmp",
             "nixos-install",
             "--impure",
             "--no-root-passwd",
@@ -851,8 +854,13 @@ def run():
     # Install customizations
     try:
         output = ""
+        new_env = dict(os.environ)
+        new_env["TMPDIR"] = f"{root_mount_point}/tmp"
         proc = subprocess.Popen(
-            nixosInstallCmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            nixosInstallCmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            env=new_env,
         )
         while True:
             line = proc.stdout.readline().decode("utf-8")
@@ -863,7 +871,9 @@ def run():
         exit = proc.wait()
         if exit != 0:
             return (_("nixos-install failed"), _(output))
-    except:
+    except Exception as e:
+        libcalamares.utils.error(str(e))
+        libcalamares.utils.error(str(e.__dict__))
         return (_("nixos-install failed"), _("Installation failed to complete"))
 
     return None
