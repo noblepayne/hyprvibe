@@ -20,22 +20,22 @@
     zed-editor
     # Additional development tools from Omarchy
     cargo
-    clang
+    #clang
     llvm
-    mise
-    imagemagick
-    mariadb
-    postgresql
-    github-cli
-    lazygit
+    #mise
+    #imagemagick
+    #mariadb
+    #postgresql
+    #github-cli
+    #lazygit
     kitty
-    lazydocker
+    #lazydocker
   ];
 
   multimedia = with pkgs; [
-    mpv
-    vlc
-    ffmpeg-full
+    #mpv
+    #vlc
+    #ffmpeg-full
     # haruna
     # reaper
     lame
@@ -46,15 +46,15 @@
     # krita
     x32edit
     # pwvucontrol
-    easyeffects
-    wayfarer
-    obs-studio
-    obs-studio-plugins.obs-pipewire-audio-capture
+    #easyeffects
+    #wayfarer
+    #obs-studio
+    #obs-studio-plugins.obs-pipewire-audio-capture
     # obs-studio-plugins.waveform
     libepoxy
-    audacity
+    #audacity
     # Additional multimedia tools from Omarchy
-    ffmpegthumbnailer
+    #ffmpegthumbnailer
     gnome.gvfs
     imv
   ];
@@ -71,8 +71,8 @@
     unzip
     gnupg
     restic
-    autorestic
-    restique
+    #autorestic
+    #restique
     #    ventoy
     hddtemp
     smartmontools
@@ -82,9 +82,9 @@
     lsof
     lshw
     # rustdesk-flutter
-    tor-browser
+    #tor-browser
     # lmstudio
-    vdhcoapp
+    #vdhcoapp
     ulauncher
     #    python312Packages.todoist-api-python
     wmctrl
@@ -168,31 +168,31 @@
 
   applications = with pkgs; [
     firefox
-    brave
-    google-chrome
-    slack
-    telegram-desktop
-    element-desktop
-    nextcloud-client
+    #brave
+    #google-chrome
+    #slack
+    #telegram-desktop
+    #element-desktop
+    #nextcloud-client
     trayscale
     alacritty
     maestral-gui
-    qownnotes
+    #qownnotes
     libation
-    audible-cli
+    #audible-cli
     # Additional applications from Omarchy
-    chromium
+    #chromium
     gnome-calculator
     gnome-keyring
-    signal-desktop
-    libreoffice
-    kdePackages.kdenlive
-    xournalpp
+    #signal-desktop
+    #libreoffice
+    #kdePackages.kdenlive
+    #xournalpp
     localsend
     # Note: Some packages like pinta, typora, spotify, zoom may need to be installed via other means
     # or may have different names in Nix
-    _1password-gui
-    _1password-cli
+    #_1password-gui
+    #_1password-cli
     hyprpicker
     hyprshot
     wl-clip-persist
@@ -208,15 +208,15 @@
 
   gaming = with pkgs; [
     # steam - now managed by programs.steam
-    steam-run
-    moonlight-qt
-    sunshine
+    #steam-run
+    #moonlight-qt
+    #sunshine
     adwaita-icon-theme
-    lutris
-    playonlinux
-    wineWowPackages.staging
-    winetricks
-    vulkan-tools
+    #lutris
+    #playonlinux
+    #wineWowPackages.staging
+    #winetricks
+    #vulkan-tools
   ];
 
   # GTK applications (replacing GNOME apps)
@@ -233,8 +233,8 @@
     kdePackages.ark
     kdePackages.konsole
     # Also include Thunar alongside Dolphin
-    xfce.thunar
-    xfce.tumbler
+    #xfce.thunar
+    #xfce.tumbler
     gvfs
     # Theming packages
     tokyo-night-gtk
