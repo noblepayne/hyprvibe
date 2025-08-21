@@ -12,16 +12,16 @@
     cmake
     python3
     go
-    gh
+    #gh
     gitui
     patchelf
     binutils
     nixfmt-rfc-style
-    zed-editor
+    #zed-editor
     # Additional development tools from Omarchy
     cargo
     #clang
-    llvm
+    #llvm
     #mise
     #imagemagick
     #mariadb
@@ -38,20 +38,20 @@
     #ffmpeg-full
     # haruna
     # reaper
-    lame
+    #lame
     # carla
     qjackctl
     qpwgraph
     # sonobus
     # krita
-    x32edit
+    #x32edit
     # pwvucontrol
     #easyeffects
     #wayfarer
     #obs-studio
     #obs-studio-plugins.obs-pipewire-audio-capture
     # obs-studio-plugins.waveform
-    libepoxy
+    #libepoxy
     #audacity
     # Additional multimedia tools from Omarchy
     #ffmpegthumbnailer
@@ -63,14 +63,14 @@
     ghostty
     htop
     btop
-    neofetch
+    #neofetch
     nmap
-    mosh
-    yt-dlp
+    #mosh
+    #yt-dlp
     zip
     unzip
-    gnupg
-    restic
+    #gnupg
+    #restic
     #autorestic
     #restique
     #    ventoy
@@ -129,13 +129,13 @@
     whois
     bash-completion
     # Additional desktop utilities from Omarchy
-    pamixer
-    wiremix
-    fcitx5
-    fcitx5-gtk
-    kdePackages.fcitx5-qt
-    nautilus
-    sushi
+    #pamixer
+    #wiremix
+    #fcitx5
+    #fcitx5-gtk
+    #kdePackages.fcitx5-qt
+    #nautilus
+    #sushi
     # Additional Hyprland utilities from Omarchy
     # polkit_gnome  # removed to avoid duplicate agents; using KDE polkit agent
     libqalculate
@@ -148,47 +148,47 @@
     networkmanagerapplet
     # Shell history replacement
     atuin
-    ddcutil
+    #ddcutil
     curl
     openssh
     glib-networking
-    rclone
+    #rclone
   ];
 
   systemTools = with pkgs; [
     btrfs-progs
     btrfs-snap
     pciutils
-    cifs-utils
-    samba
-    fuse
-    fuse3
-    docker-compose
+    #cifs-utils
+    #samba
+    #fuse
+    #fuse3
+    #docker-compose
   ];
 
   applications = with pkgs; [
-    firefox
+    #firefox
     #brave
     #google-chrome
     #slack
     #telegram-desktop
     #element-desktop
     #nextcloud-client
-    trayscale
+    #trayscale
     alacritty
-    maestral-gui
+    #maestral-gui
     #qownnotes
-    libation
+    #libation
     #audible-cli
     # Additional applications from Omarchy
     #chromium
-    gnome-calculator
+    #gnome-calculator
     gnome-keyring
     #signal-desktop
     #libreoffice
     #kdePackages.kdenlive
     #xournalpp
-    localsend
+    #localsend
     # Note: Some packages like pinta, typora, spotify, zoom may need to be installed via other means
     # or may have different names in Nix
     #_1password-gui
@@ -203,7 +203,7 @@
     yazi
     starship
     # zoxide  # deduped; present in utilities
-    rclone-browser
+    # rclone-browser
   ];
 
   gaming = with pkgs; [
@@ -243,27 +243,27 @@
     adwaita-qt
     adwaita-qt6
     # Document viewer
-    evince
+    #evince
     # Image viewer
-    eog
+    #eog
     # Calculator
-    gnome-calculator
+    #gnome-calculator
     # Archive manager
-    file-roller
+    #file-roller
     # Video player
-    celluloid
+    #celluloid
     # Torrent client
-    fragments
+    #fragments
     # Ebook reader
-    foliate
+    #foliate
     # Background sounds
-    blanket
+    #blanket
     # Metadata cleaner
-    metadata-cleaner
+    #metadata-cleaner
     # Translation app
-    dialect
+    #dialect
     # Drawing app
-    drawing
+    #drawing
   ];
   # Centralized wallpaper path used by hyprpaper and hyprlock
   wallpaperPath = "/home/chrisf/build/config/hosts/rvbee/aesthetic_8_bit_art-wallpaper-3840x2160.jpg";
@@ -393,7 +393,7 @@ in {
       enable = true;
       wayland = true;
     };
-    printing.enable = true;
+    printing.enable = false;
     pipewire = {
       enable = true;
       alsa = {
@@ -405,9 +405,9 @@ in {
       wireplumber.enable = true;
     };
     openssh.enable = true;
-    tailscale.enable = true;
-    netdata.enable = true;
-    flatpak.enable = true;
+    tailscale.enable = false;
+    netdata.enable = false;
+    flatpak.enable = false;
     # Atuin shell history service
     atuin = {
       enable = true;
@@ -442,7 +442,7 @@ in {
 
   # Virtualization
   virtualisation = {
-    libvirtd.enable = true;
+    libvirtd.enable = false;
     docker = {
       enable = true;
       autoPrune = {
@@ -590,19 +590,19 @@ in {
   # Programs
   programs = {
     fish.enable = true;
-    adb.enable = true;
-    virt-manager.enable = true;
+    adb.enable = false;
+    virt-manager.enable = false;
     dconf.enable = true;
-    gamemode.enable = true;
+    gamemode.enable = false;
     thunar = {
-      enable = true;
+      enable = false;
       plugins = with pkgs.xfce; [
         thunar-archive-plugin
         thunar-volman
       ];
     };
     steam = {
-      enable = true;
+      enable = false;
       gamescopeSession.enable = true;
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
